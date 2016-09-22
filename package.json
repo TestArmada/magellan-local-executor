@@ -1,0 +1,30 @@
+{
+  "name": "testarmada-magellan-local-executor",
+  "version": "0.0.1",
+  "description": "an executor to run test with magellan locally",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TestArmada/magellan-local-executor.git"
+  },
+  "keywords": [
+    "magellan",
+    "executor",
+    "local"
+  ],
+  "author": "Lei Zhu <thunderzhulei@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TestArmada/magellan-local-executor/issues"
+  },
+  "homepage": "https://github.com/TestArmada/magellan-local-executor#readme",
+  "dependencies": {
+    "cli-color": "^1.1.0",
+    "lodash": "^4.16.1",
+    "once": "^1.4.0",
+    "q": "^1.4.1"
+  }
+}
