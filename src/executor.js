@@ -1,5 +1,4 @@
 import { fork } from "child_process";
-import logger from "./logger";
 
 export default {
   /*eslint-disable no-unused-vars*/
