@@ -5,6 +5,6 @@ const debug = argv.debug;
 const config = {};
 
 export default {
-  debug: debug,
-  config: config
+  debug,
+  config
 };

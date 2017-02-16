@@ -12,10 +12,12 @@ export default {
     }
 
     const configPath = opts.settings.testFramework.settings.nightwatchConfigFilePath;
+
+    /*eslint-disable global-require*/
     const nightwatchConfig = require(path.resolve(configPath));
     const browsers = nightwatchConfig.test_settings;
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       if (runArgv.local_browser) {
         const localBrowser = runArgv.local_browser;
         if (browsers[localBrowser]) {
@@ -24,6 +26,8 @@ export default {
           b.executor = "local";
           b.nightwatchEnv = localBrowser;
           b.id = localBrowser;
+
+          logger.debug(`detected profile: ${ JSON.stringify(b)}`);
 
           resolve([b]);
         }
@@ -42,6 +46,8 @@ export default {
             returnBrowsers.push(b);
           }
         });
+
+        logger.debug(`detected profiles: ${ JSON.stringify(returnBrowsers)}`);
 
         resolve(returnBrowsers);
       } else {
@@ -66,7 +72,7 @@ export default {
 
         resolve(b);
       } else {
-        reject("profile: " + profile + " isn't found");
+        reject(`profile: ${ profile } isn't found`);
       }
     });
   },
@@ -77,9 +83,20 @@ export default {
     const nightwatchConfig = require(path.resolve(configPath));
     const browsers = nightwatchConfig.test_settings;
 
+    const OMIT_BROWSERS = ["default", "sauce"];
+    const listedBrowsers = [];
+
+
     _.forEach(browsers, (capabilities, browser) => {
-      logger.loghelp(browser, capabilities);
+      if (OMIT_BROWSERS.indexOf(browser) < 0) {
+        logger.debug(`  browser:    ${ browser}`);
+        logger.debug(`  capabilities: ${ JSON.stringify(capabilities)}`);
+        listedBrowsers.push(browser);
+      }
     });
+
+    logger.log(`Available browsers from file ${ configPath }: ${ listedBrowsers.join(",")}`);
+
     callback();
-  },
+  }
 };

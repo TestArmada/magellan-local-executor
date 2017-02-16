@@ -1,4 +1,4 @@
-"use strict";
+
 
 import { argv } from "yargs";
 import util from "util";
@@ -16,18 +16,22 @@ export default {
       this.output.log(util.format("%s [%s] %s", deb, PREFIX, msg));
     }
   },
+
   log(msg) {
     const info = clc.greenBright("[INFO]");
     this.output.log(util.format("%s [%s] %s", info, PREFIX, msg));
   },
+
   warn(msg) {
     const warn = clc.yellowBright("[WARN]");
     this.output.warn(util.format("%s [%s] %s", warn, PREFIX, msg));
   },
+
   err(msg) {
     const err = clc.redBright("[ERROR]");
     this.output.error(util.format("%s [%s] %s", err, PREFIX, msg));
   },
+
   loghelp(msg) {
     this.output.log(msg);
   }

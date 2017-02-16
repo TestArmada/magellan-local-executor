@@ -46,4 +46,21 @@ describe("Executor", () => {
       done();
     });
   });
+
+  it("execute", () => {
+    const mocks = {
+      fork(cmd, args, opts) {
+        return 1;
+      }
+    };
+
+    const testRun = {
+      getCommand() { },
+      getArguments() { }
+    };
+
+    let r = executor.execute(testRun, {}, mocks);
+    expect(r).to.equal(1);
+  });
+
 });
