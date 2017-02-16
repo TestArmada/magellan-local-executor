@@ -5,7 +5,7 @@ import util from "util";
 import clc from "cli-color";
 
 const debug = argv.debug;
-const PREFIX = "Saucelabs Executor";
+const PREFIX = "Local Executor";
 
 export default {
   output: console,
