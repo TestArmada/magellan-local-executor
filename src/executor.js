@@ -5,7 +5,6 @@ export default {
   /*eslint-disable no-unused-vars*/
   setup: (mocks = null) => {
     return new Promise((resolve) => {
-      logger.log("Setting pre-requisites up");
       resolve();
     });
   },
@@ -13,18 +12,15 @@ export default {
   /*eslint-disable no-unused-vars*/
   teardown: (mocks = null) => {
     return new Promise((resolve) => {
-      logger.log("Tearing pre-requisites down");
       resolve();
     });
   },
 
   stage: (callback) => {
-    logger.log("Staging before test run");
     callback();
   },
 
   wrapup: (info, callback) => {
-    logger.log("Cleaning up after test run");
     callback();
   },
 
