@@ -1,0 +1,60 @@
+{
+  "test_settings": {
+    "default": {
+      "launch_url": "http://localhost",
+      "selenium_port": 4444,
+      "selenium_host": "localhost",
+      "silent": true,
+      "sync_test_names": true,
+      "screenshots": {
+        "enabled": false,
+        "path": ""
+      },
+      "desiredCapabilities": {
+        "browserName": "chrome"
+      },
+      "globals": {
+        "waitForConditionTimeout": 60000,
+        "asyncHookTimeout": 60000
+      }
+    },
+    "phantomjs": {
+      "desiredCapabilities": {
+        "browserName": "phantomjs",
+        "javascriptEnabled": true,
+        "acceptSslCerts": true,
+        "phantomjs.binary.path": "./node_modules/phantomjs/bin/phantomjs"
+      }
+    },
+    "safari": {
+      "desiredCapabilities": {
+        "browserName": "safari"
+      }
+    },
+    "firefox": {
+      "desiredCapabilities": {
+        "browserName": "firefox"
+      }
+    },
+    "chrome": {
+      "desiredCapabilities": {
+        "browserName": "chrome"
+      }
+    },
+    "sauce": {
+      "selenium_host": "ondemand.saucelabs.com",
+      "selenium_port": 80,
+      "username": "",
+      "access_key": "",
+      "desiredCapabilities": {
+        "browserName": "",
+        "platform": "",
+        "version": "",
+        "tunnel-identifier": ""
+      },
+      "selenium": {
+        "start_process": false
+      }
+    }
+  }
+}
