@@ -4,6 +4,15 @@ import { argv } from "yargs";
 import logger from "./logger";
 
 export default {
+  getNightwatchConfig: (profile) => {
+    const config = {
+      desiredCapabilities: profile.desiredCapabilities
+    };
+
+    logger.debug(`executor config: ${JSON.stringify(config)}`);
+    return config;
+  },
+
   getProfiles: (opts, argvMock = null) => {
     let runArgv = argv;
 

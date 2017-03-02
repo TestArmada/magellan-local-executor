@@ -1,9 +1,7 @@
-import logger from "./logger";
 import settings from "./settings";
 
 export default {
   getConfig: () => {
-    logger.debug(`executor config: ${ JSON.stringify(settings.config)}`);
     return settings.config;
   },
 
