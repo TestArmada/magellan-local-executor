@@ -2,24 +2,24 @@ import { fork } from "child_process";
 
 export default {
   /*eslint-disable no-unused-vars*/
-  setup: (mocks = null) => {
+  setupRunner: (mocks = null) => {
     return new Promise((resolve) => {
       resolve();
     });
   },
 
   /*eslint-disable no-unused-vars*/
-  teardown: (mocks = null) => {
+  teardownRunner: (mocks = null) => {
     return new Promise((resolve) => {
       resolve();
     });
   },
 
-  stage: (callback) => {
+  setupTest: (callback) => {
     callback();
   },
 
-  wrapup: (info, callback) => {
+  teardownTest: (info, callback) => {
     callback();
   },
 
@@ -31,5 +31,9 @@ export default {
     }
 
     return ifork(testRun.getCommand(), testRun.getArguments(), options);
+  },
+
+  summerizeTest: (magellanBuildId, testResult, callback) => {
+    callback();
   }
 };

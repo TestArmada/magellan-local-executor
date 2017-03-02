@@ -19,29 +19,29 @@ const expect = chai.expect;
 const assert = chai.assert;
 
 describe("Executor", () => {
-  it("setup", () => {
+  it("setupRunner", () => {
     return executor
-      .setup()
+      .setupRunner()
       .then()
       .catch(err => assert(false, "executor doesn't setup correctly." + err));
   });
 
-  it("teardown", () => {
+  it("teardownRunner", () => {
     return executor
-      .teardown()
+      .teardownRunner()
       .then()
       .catch(err => assert(false, "executor doesn't teardown correctly." + err));
   });
 
-  it("stage", (done) => {
-    executor.stage(() => {
+  it("setupTest", (done) => {
+    executor.setupTest(() => {
       assert(true);
       done();
     });
   });
 
-  it("wrapup", (done) => {
-    executor.wrapup({}, () => {
+  it("teardownTest", (done) => {
+    executor.teardownTest({}, () => {
       assert(true);
       done();
     });
