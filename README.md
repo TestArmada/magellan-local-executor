@@ -23,7 +23,7 @@ Please follow the steps
  ]
  ```
 
- 3. `./node_modules/.bin/magellan ----help` to see if you can see the following content printed out
+ 3. `./node_modules/.bin/magellan --help` to see if you can see the following content printed out
  ```
   Executor-specific (testarmada-magellan-local-executor)
    --local_browser=browsername          Run tests in chrome, firefox, etc (default: phantomjs).

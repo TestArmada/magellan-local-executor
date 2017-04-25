@@ -3,16 +3,6 @@ import chai from "chai";
 import chaiAsPromise from "chai-as-promised";
 import _ from "lodash";
 
-import logger from "../../lib/logger";
-
-// eat console logs
-// logger.output = {
-//   log() { },
-//   error() { },
-//   debug() { },
-//   warn() { }
-// };
-
 chai.use(chaiAsPromise);
 
 const expect = chai.expect;
@@ -20,6 +10,47 @@ const assert = chai.assert;
 
 describe("Profile", () => {
   describe("getProfiles", () => {
+    it("mocha via cmd", () => {
+      let argvMock = {
+        local_mocha: true
+      };
+
+      let opts = {
+        settings: {
+          testFramework: {
+          }
+        }
+      };
+
+      return profile
+        .getProfiles(opts, argvMock)
+        .then((p) => {
+          expect(p.length).to.equal(1);
+          expect(p[0].executor).to.equal("local");
+          expect(p[0].id).to.equal("mocha");
+        })
+        .catch(err => assert(false, "getProfile isn't functional" + err));
+    });
+
+    it("mocha via plugin", () => {
+      let opts = {
+        settings: {
+          testFramework: {
+            name: "testarmada-magellan-mocha-plugin"
+          }
+        }
+      };
+
+      return profile
+        .getProfiles(opts)
+        .then((p) => {
+          expect(p.length).to.equal(1);
+          expect(p[0].executor).to.equal("local");
+          expect(p[0].id).to.equal("mocha");
+        })
+        .catch(err => assert(false, "getProfile isn't functional" + err));
+    });
+
     it("with local_browser", () => {
       let argvMock = {
         local_browser: "chrome"
@@ -100,6 +131,24 @@ describe("Profile", () => {
   });
 
   describe("getCapabilities", () => {
+    it("mocha", () => {
+      let opts = {
+        settings: {
+          testFramework: {
+            name: "testarmada-magellan-mocha-plugin"
+          }
+        }
+      };
+
+      return profile
+        .getCapabilities(null, opts)
+        .then((p) => {
+          expect(p.executor).to.equal("local");
+          expect(p.id).to.equal("mocha");
+        })
+        .catch(err => assert(false, "getProfile isn't functional" + err));
+    });
+
     it("succeed", () => {
       let opts = {
         settings: {
@@ -146,6 +195,21 @@ describe("Profile", () => {
             settings: {
               nightwatchConfigFilePath: "./test/src/nightwatch.json"
             }
+          }
+        }
+      };
+
+      return profile
+        .listBrowsers(opts, () => {
+          done();
+        });
+    });
+
+    it("mocha listBrowsers", (done) => {
+      let opts = {
+        settings: {
+          testFramework: {
+            name: "testarmada-magellan-mocha-plugin"
           }
         }
       };
