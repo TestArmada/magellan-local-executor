@@ -47,7 +47,7 @@ export default {
         resolve(profiles);
       } else {
         // framework doesn't understand how to solve profiles
-        logger.warn(`no profile is detected, use the default one`);
+        logger.warn("no profile is detected, use the default one");
         resolve([{ executor: "local", id: "mocha" }]);
       }
     });
@@ -57,12 +57,12 @@ export default {
   /*eslint-disable global-require*/
   getCapabilities: (profile, opts) => {
     logger.prefix = "Local Executor";
+    return new Promise((resolve, reject) => {
+      if (opts.settings.testFramework.profile
+        && opts.settings.testFramework.profile.getCapabilities) {
+        // if framework plugin knows how to solve capabilities
 
-    if (opts.settings.testFramework.profile
-      && opts.settings.testFramework.profile.getCapabilities) {
-      // if framework plugin knows how to solve capabilities
 
-      return new Promise((resolve, reject) => {
         try {
           const p = opts.settings.testFramework.profile.getCapabilities(profile);
           p.executor = "local";
@@ -72,12 +72,13 @@ export default {
           logger.err(`profile: ${profile} isn't found`);
           reject(e);
         }
-      });
-    } else {
-      // framework doesn't understand how to solve capabilities
-      logger.warn(`no capabilities is detected, use the default one`);
-      resolve({ executor: "local", id: "mocha" });
-    }
+
+      } else {
+        // framework doesn't understand how to solve capabilities
+        logger.warn("no capabilities is detected, use the default one");
+        resolve({ executor: "local", id: "mocha" });
+      }
+    });
   },
 
   /*eslint-disable global-require*/
@@ -89,7 +90,7 @@ export default {
       // if framework plugin knows how to list browsers
 
       const listedBrowsers = opts.settings.testFramework.profile.listBrowsers();
-      logger.log(`Available browsers from file ${configPath}: ${listedBrowsers.join(",")}`);
+      logger.log(`Available browsers: ${listedBrowsers.join(",")}`);
 
       return callback();
     } else {
