@@ -1,11 +1,11 @@
-import path from "path";
 import _ from "lodash";
 import { argv } from "yargs";
 import logger from "testarmada-logger";
-logger.prefix = "Local Executor";
 
 export default {
   getNightwatchConfig: (profile) => {
+    logger.prefix = "Local Executor";
+
     const config = {
       desiredCapabilities: profile.desiredCapabilities
     };
@@ -15,117 +15,85 @@ export default {
   },
 
   getProfiles: (opts, argvMock = null) => {
+    logger.prefix = "Local Executor";
+
     let runArgv = argv;
 
     if (argvMock) {
       runArgv = argvMock;
     }
-    if (runArgv.local_mocha
-      || opts.settings.testFramework.name
-      && opts.settings.testFramework.name === "testarmada-magellan-mocha-plugin") {
-      // do nothing for mocha
-      return new Promise((resolve) => resolve([{ executor: "local", id: "mocha" }]));
-    } else {
-      const configPath = opts.settings.testFramework.settings.nightwatchConfigFilePath;
 
-      /*eslint-disable global-require*/
-      const nightwatchConfig = require(path.resolve(configPath));
-      const browsers = nightwatchConfig.test_settings;
+    return new Promise((resolve) => {
+      const browsers = [];
 
-      return new Promise((resolve) => {
-        if (runArgv.local_browser) {
-          const localBrowser = runArgv.local_browser;
-          if (browsers[localBrowser]) {
-            const b = browsers[localBrowser];
+      if (runArgv.local_browser) {
+        browsers.push(runArgv.local_browser);
+      } else if (runArgv.local_browsers) {
+        _.forEach(runArgv.local_browsers.split(","), (browser) => {
+          browsers.push(browser);
+        });
+      }
 
-            b.executor = "local";
-            b.nightwatchEnv = localBrowser;
-            b.id = localBrowser;
+      if (opts.settings.testFramework.profile
+        && opts.settings.testFramework.profile.getProfiles) {
+        // if framework plugin knows how to solve profiles
+        const profiles = opts.settings.testFramework.profile.getProfiles(browsers);
 
-            logger.debug(`detected profile: ${JSON.stringify(b)}`);
+        _.forEach(profiles, (profile) => {
+          profile.executor = "local";
+        });
 
-            resolve([b]);
-          }
-        } else if (runArgv.local_browsers) {
-          const tempBrowsers = runArgv.local_browsers.split(",");
-          const returnBrowsers = [];
+        logger.debug(`detected profile: ${JSON.stringify(profiles)}`);
+        resolve(profiles);
+      } else {
+        // framework doesn't understand how to solve profiles
+        logger.warn(`no profile is detected, use the default one`);
+        resolve([{ executor: "local", id: "mocha" }]);
+      }
+    });
 
-          _.forEach(tempBrowsers, (browser) => {
-            if (browsers[browser]) {
-              const b = browsers[browser];
-
-              b.executor = "local";
-              b.nightwatchEnv = browser;
-              b.id = browser;
-
-              returnBrowsers.push(b);
-            }
-          });
-
-          logger.debug(`detected profiles: ${JSON.stringify(returnBrowsers)}`);
-
-          resolve(returnBrowsers);
-        } else {
-          resolve();
-        }
-      });
-    }
   },
 
   /*eslint-disable global-require*/
   getCapabilities: (profile, opts) => {
-    if (argv.local_mocha
-      || opts.settings.testFramework.name
-      && opts.settings.testFramework.name === "testarmada-magellan-mocha-plugin") {
-      // do nothing for mocha
-      return new Promise((resolve) => resolve({ executor: "local", id: "mocha" }));
-    } else {
-      const configPath = opts.settings.testFramework.settings.nightwatchConfigFilePath;
-      const nightwatchConfig = require(path.resolve(configPath));
-      const browsers = nightwatchConfig.test_settings;
+    logger.prefix = "Local Executor";
+
+    if (opts.settings.testFramework.profile
+      && opts.settings.testFramework.profile.getCapabilities) {
+      // if framework plugin knows how to solve capabilities
 
       return new Promise((resolve, reject) => {
-        if (browsers[profile]) {
-          const b = browsers[profile];
+        try {
+          const p = opts.settings.testFramework.profile.getCapabilities(profile);
+          p.executor = "local";
 
-          b.executor = "local";
-          b.nightwatchEnv = profile;
-          b.id = profile;
-
-          resolve(b);
-        } else {
-          reject(`profile: ${profile} isn't found`);
+          resolve(p);
+        } catch (e) {
+          logger.err(`profile: ${profile} isn't found`);
+          reject(e);
         }
       });
+    } else {
+      // framework doesn't understand how to solve capabilities
+      logger.warn(`no capabilities is detected, use the default one`);
+      resolve({ executor: "local", id: "mocha" });
     }
   },
 
   /*eslint-disable global-require*/
   listBrowsers: (opts, callback) => {
-    if (argv.local_mocha
-      || opts.settings.testFramework.name
-      && opts.settings.testFramework.name === "testarmada-magellan-mocha-plugin") {
-      // do nothing for mocha
-      return callback();
-    } else {
-      const configPath = opts.settings.testFramework.settings.nightwatchConfigFilePath;
-      const nightwatchConfig = require(path.resolve(configPath));
-      const browsers = nightwatchConfig.test_settings;
+    logger.prefix = "Local Executor";
 
-      const OMIT_BROWSERS = ["default", "sauce"];
-      const listedBrowsers = [];
+    if (opts.settings.testFramework.profile
+      && opts.settings.testFramework.profile.listBrowsers) {
+      // if framework plugin knows how to list browsers
 
-
-      _.forEach(browsers, (capabilities, browser) => {
-        if (OMIT_BROWSERS.indexOf(browser) < 0) {
-          logger.debug(`  browser:    ${browser}`);
-          logger.debug(`  capabilities: ${JSON.stringify(capabilities)}`);
-          listedBrowsers.push(browser);
-        }
-      });
-
+      const listedBrowsers = opts.settings.testFramework.profile.listBrowsers();
       logger.log(`Available browsers from file ${configPath}: ${listedBrowsers.join(",")}`);
 
+      return callback();
+    } else {
+      // if framework plugin doesn't know how to list browsers
       return callback();
     }
   }

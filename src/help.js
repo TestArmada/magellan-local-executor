@@ -1,10 +1,4 @@
 export default {
-  "local_mocha": {
-    "visible": true,
-    "type": "boolean",
-    "description": "Run test via magellan-mocha-plugin "
-    + "(exclusive with list_browser and list_browsers)"
-  },
   "local_browser": {
     "visible": true,
     "type": "string",
