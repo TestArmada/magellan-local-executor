@@ -7,3 +7,4 @@ src/
 .istanbul.yml
 .travis.yml
 babel.config.js
+.git
