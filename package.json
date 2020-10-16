@@ -1,6 +1,6 @@
 {
   "name": "testarmada-magellan-local-executor",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "test executor for magellan test to run in local selenium env",
   "main": "index.js",
   "scripts": {
