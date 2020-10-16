@@ -28,7 +28,6 @@
   },
   "homepage": "https://github.com/TestArmada/magellan-local-executor#readme",
   "dependencies": {
-    "@babel/runtime": "^7.12.1",
     "cli-color": "^1.1.0",
     "lodash": "^4.17.4",
     "testarmada-logger": "^1.2.2",
