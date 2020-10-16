@@ -1,0 +1,9 @@
+node_modules
+.vscode
+test/
+src/
+.eslintrc
+.gitignore
+.istanbul.yml
+.travis.yml
+babel.config.js
